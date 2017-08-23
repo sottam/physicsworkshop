@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DragnDrop : MonoBehaviour {
     public float clickRange = 5f;
+    public float minimumForce = .35f, maximumForce = 1f;
     public float forceConstant = 1000f;
     public Color unclickableColor;
 
@@ -17,7 +18,6 @@ public class DragnDrop : MonoBehaviour {
 
     private GameObject yoda;
 
-    private bool mouseup = false;
 
 	// Use this for initialization
 	void Start () {
@@ -69,26 +69,15 @@ public class DragnDrop : MonoBehaviour {
 
     private void ThrowBall() {
         Vector3 throwDirection = transform.position - yoda.transform.position;
-        float force = Mathf.Clamp(1 / throwDirection.magnitude, .35f, 1);
+        float force = Mathf.Clamp(1 / throwDirection.magnitude, minimumForce, maximumForce);
         rb.AddForce(throwDirection.normalized * force * forceConstant);
     }
-
-/*
-    private void FixedUpdate() {
-        if (rb.bodyType == RigidbodyType2D.Dynamic) {
-            if (mouseup && isInYodaTrigger) {
-                ThrowBall();
-                print ("caralho2");
-                mouseup = false;
-            }
-        }
-    } */
 
     private void OnMouseDown() {
         if (canBeDragged) {
             isBeingDragged = true;
             rb.bodyType = RigidbodyType2D.Kinematic;
-            cc.enabled = false;
+            gameObject.layer = 8;
         }
     }
 
@@ -97,16 +86,16 @@ public class DragnDrop : MonoBehaviour {
         rb.bodyType = RigidbodyType2D.Dynamic;
         cc.enabled = true;
 
-        mouseup = true;
+        if (isInYodaTrigger) {
+            ThrowBall();
+            isInYodaTrigger = false;
+        }
+        gameObject.layer = 0;
         
     }
-    private void OnTriggerStay2D(Collider2D collision) {
+    private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("yoda")) {
             isInYodaTrigger = true;
-            if (mouseup) {
-                ThrowBall();
-                mouseup = false;
-            }
         }
     }
 
