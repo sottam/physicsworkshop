@@ -14,6 +14,7 @@ public class DragnDrop : MonoBehaviour {
     private Rigidbody2D rb;
     private Collider2D cc;
     private ParticleSystem explosion;
+    private PointEffector2D pe;
 
     private bool isBeingDragged = false;
     private bool isBeingThrown = false;
@@ -29,6 +30,7 @@ public class DragnDrop : MonoBehaviour {
         sr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         cc = GetComponent<Collider2D>();
+        pe = GetComponent<PointEffector2D>();
         explosion = GetComponentInChildren<ParticleSystem>();
 	}
 	
@@ -88,6 +90,7 @@ public class DragnDrop : MonoBehaviour {
         rb.velocity = Vector3.zero;
         rb.angularVelocity = 0;
         explosion.Play();
+        pe.enabled = true;
         Destroy(gameObject, explosion.main.duration);
     } 
 
