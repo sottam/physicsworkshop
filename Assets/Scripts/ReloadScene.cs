@@ -7,4 +7,8 @@ public class ReloadScene : MonoBehaviour {
 	public void Reload() {
         SceneManager.LoadScene(0);
     }
+    public void Sair()
+    {
+        Application.Quit();
+    }
 }
