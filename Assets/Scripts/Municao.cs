@@ -7,15 +7,13 @@ public class Municao : MonoBehaviour {
     [SerializeField] private int municao;
     [SerializeField] private GameObject Bomba;
 
-    public static bool BombaNaTela = true;
 
-    void FixedUpdate()
+    public void SpawnNewBomb()
     {
-        if (BombaNaTela == false && municao > 0)
+        if (municao > 0)
         {
-            Instantiate(Bomba, transform.position + Vector3.right, Quaternion.identity);
+            Instantiate(Bomba, transform.position + Vector3.right + Vector3.back, Quaternion.identity);
             municao--;
-            BombaNaTela = true;
         }
     }
 }

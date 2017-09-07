@@ -15,18 +15,21 @@ public class DragnDrop : MonoBehaviour {
     private Collider2D cc;
     private ParticleSystem explosion;
     private PointEffector2D pe;
+    private Municao municao;
 
     private bool isBeingDragged = false;
     private bool isBeingThrown = false;
     private bool isExploding = false;
 
     private GameObject yoda;
+    public bool FoiVisto = false;
 
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 
         yoda = GameObject.FindGameObjectWithTag("yoda");
+        municao = yoda.GetComponent<Municao>();
         sr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         cc = GetComponent<Collider2D>();
@@ -67,11 +70,19 @@ public class DragnDrop : MonoBehaviour {
             transform.position = Vector3.ClampMagnitude(transform.position - yoda.transform.position, clickRange);
             transform.position += yoda.transform.position;
             //FIM USANDO CLAMP
-
-            
-
         }
-	}
+
+        //verifica se saiu da tela para criar outra bomba
+        if (sr.isVisible)
+            FoiVisto = true;
+
+        if (FoiVisto && !sr.isVisible && !isExploding)
+        {
+            Destroy(gameObject);
+            municao.SpawnNewBomb();
+            
+        }
+    }
 
     private void ThrowBall() {
         isBeingThrown = true;
@@ -94,7 +105,7 @@ public class DragnDrop : MonoBehaviour {
         yield return new WaitForFixedUpdate();
         pe.enabled = false;
         Destroy(gameObject, explosion.main.duration);
-        Municao.BombaNaTela = false;
+        municao.SpawnNewBomb();
     } 
 
     private void OnMouseDown() {
